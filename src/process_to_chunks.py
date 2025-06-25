@@ -1,95 +1,243 @@
-"""
-Simple content processor for creating chunks from scraped text files.
-"""
-
 import os
+import nltk
+import numpy as np
+from nltk.tokenize import sent_tokenize
 import json
-import glob
 
+# Download required NLTK data
+try:
+    nltk.download('punkt', quiet=True)
+    nltk.download('punkt_tab', quiet=True)
+except Exception as e:
+    print(f"Warning: Could not download NLTK data: {e}")
 
-class SimpleChunker:
-    """Simple text chunker that creates manageable pieces of content."""
+class TextChunker:
+    """
+    A class to handle text chunking with overlap and proper sentence boundaries.
+    """
     
-    def __init__(self, chunk_size=500, overlap=50):
-        self.chunk_size = chunk_size
-        self.overlap = overlap
+    def __init__(self, chunk_size: int = 200, overlap_size: int = 50):
+        """
+        Initialize the text chunker.
         
-        # Setup directories
-        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        self.raw_dir = os.path.join(base_dir, "data", "raw")
-        self.processed_dir = os.path.join(base_dir, "data", "processed")
-        os.makedirs(self.processed_dir, exist_ok=True)
+        Args:
+            chunk_size: Maximum number of words per chunk
+            overlap_size: Number of words to overlap between chunks
+        """
+        self.chunk_size = chunk_size
+        self.overlap_size = overlap_size
     
-    def chunk_text(self, text, source_name):
-        """Split text into overlapping chunks."""
-        if not text or len(text) < 50:
+    def chunk_text_with_overlap(self, text: str) -> list:
+        """
+        Chunk text into overlapping segments based on sentences.
+        
+        Args:
+            text: Input text to chunk
+            
+        Returns:
+            List of text chunks
+        """
+        if not text or not text.strip():
             return []
         
-        words = text.split()
-        chunks = []
+        try:
+            sentences = sent_tokenize(text)
+        except Exception as e:
+            print(f"Warning: NLTK tokenization failed, using simple split: {e}")
+            # Fallback to simple sentence splitting
+            sentences = [s.strip() + '.' for s in text.split('.') if s.strip()]
         
-        for i in range(0, len(words), self.chunk_size - self.overlap):
-            chunk_words = words[i:i + self.chunk_size]
-            chunk_text = ' '.join(chunk_words)
+        if not sentences:
+            return [text] if text.strip() else []
+        
+        chunks = []
+        current_chunk = []
+        current_tokens = 0
+        
+        i = 0
+        while i < len(sentences):
+            sentence = sentences[i]
+            sentence_tokens = len(sentence.split())
             
-            chunks.append({
-                'text': chunk_text,
-                'source': source_name,
-                'chunk_id': f"{source_name}_chunk_{len(chunks) + 1}",
-                'word_count': len(chunk_words),
-                'char_count': len(chunk_text)
-            })
+            # If adding this sentence would exceed max_tokens and we have content
+            if current_tokens + sentence_tokens > self.chunk_size and current_chunk:
+                # Save current chunk
+                chunk_text = " ".join(current_chunk)
+                if chunk_text.strip():  # Only add non-empty chunks
+                    chunks.append(chunk_text)
+                
+                # Start new chunk with overlap
+                overlap_chunk = []
+                overlap_count = 0
+                
+                # Go backwards from current position to build overlap
+                j = len(current_chunk) - 1
+                while j >= 0 and overlap_count < self.overlap_size:
+                    sentence_tokens_overlap = len(current_chunk[j].split())
+                    if overlap_count + sentence_tokens_overlap <= self.overlap_size:
+                        overlap_chunk.insert(0, current_chunk[j])
+                        overlap_count += sentence_tokens_overlap
+                        j -= 1
+                    else:
+                        break
+                
+                current_chunk = overlap_chunk
+                current_tokens = overlap_count
             
-            # Break if we've reached the end
-            if i + self.chunk_size >= len(words):
-                break
+            # Handle sentences that are longer than max_tokens
+            if sentence_tokens > self.chunk_size:
+                # If we have existing content, save it first
+                if current_chunk:
+                    chunk_text = " ".join(current_chunk)
+                    if chunk_text.strip():
+                        chunks.append(chunk_text)
+                    current_chunk = []
+                    current_tokens = 0
+                
+                # Split long sentence by words
+                words = sentence.split()
+                for k in range(0, len(words), self.chunk_size):
+                    word_chunk = " ".join(words[k:k + self.chunk_size])
+                    if word_chunk.strip():
+                        chunks.append(word_chunk)
+            else:
+                current_chunk.append(sentence)
+                current_tokens += sentence_tokens
+            
+            i += 1
+        
+        # Add final chunk if it exists
+        if current_chunk:
+            chunk_text = " ".join(current_chunk)
+            if chunk_text.strip():
+                chunks.append(chunk_text)
         
         return chunks
     
-    def process_all_files(self):
-        """Process all text files in the raw directory."""
-        print("Processing scraped content files...")
+    def process_files(self, input_dir: str, output_dir: str) -> tuple:
+        """
+        Process all text files in the input directory and create chunks.
         
-        all_chunks = []
-        txt_files = glob.glob(os.path.join(self.raw_dir, "*.txt"))
+        Args:
+            input_dir: Directory containing input text files
+            output_dir: Directory to save chunk files
+            
+        Returns:
+            Tuple of (documents, metadata) for all processed chunks
+        """
+        if not os.path.exists(input_dir):
+            raise FileNotFoundError(f"Input directory not found: {input_dir}")
         
-        for file_path in txt_files:
-            file_name = os.path.basename(file_path)
-            source_name = file_name.replace('.txt', '')
+        # Create output directory
+        os.makedirs(output_dir, exist_ok=True)
+        
+        documents = []
+        metadata = []
+        
+        # Get all .txt files
+        txt_files = [f for f in os.listdir(input_dir) if f.endswith('.txt')]
+        
+        if not txt_files:
+            print(f"No .txt files found in {input_dir}")
+            return documents, metadata
+        
+        print(f"Processing {len(txt_files)} files from {input_dir}...")
+        
+        for filename in txt_files:
+            file_path = os.path.join(input_dir, filename)
+            print(f"Processing {filename}...")
             
             try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    content = f.read().strip()
+                with open(file_path, "r", encoding="utf-8") as f:
+                    raw_text = f.read()
                 
-                if content:
-                    chunks = self.chunk_text(content, source_name)
-                    all_chunks.extend(chunks)
-                    print(f"  ✓ {source_name}: {len(chunks)} chunks ({len(content)} chars)")
-                else:
-                    print(f"  ⚠ {source_name}: empty file")
+                if not raw_text.strip():
+                    print(f"  Warning: {filename} is empty, skipping...")
+                    continue
+                
+                chunks = self.chunk_text_with_overlap(raw_text)
+                
+                if not chunks:
+                    print(f"  Warning: No chunks created for {filename}")
+                    continue
+                
+                # Create subdirectory for this file's chunks
+                file_chunks_dir = os.path.join(output_dir, filename.replace('.txt', ''))
+                os.makedirs(file_chunks_dir, exist_ok=True)
+                
+                # Save each chunk to individual files
+                for i, chunk in enumerate(chunks):
+                    chunk_filename = f"chunk_{i:03d}.txt"
+                    chunk_path = os.path.join(file_chunks_dir, chunk_filename)
                     
+                    try:
+                        with open(chunk_path, "w", encoding="utf-8") as chunk_file:
+                            chunk_file.write(chunk)
+                        
+                        # Add to documents and metadata
+                        documents.append(chunk)
+                        metadata.append({
+                            "source": filename,
+                            "chunk_id": i,
+                            "chunk_file": chunk_path,
+                            "word_count": len(chunk.split()),
+                            "char_count": len(chunk)
+                        })
+                    except Exception as e:
+                        print(f"  Error saving chunk {i} for {filename}: {e}")
+                        continue
+                
+                print(f"  Created {len(chunks)} chunks for {filename}")
+                
             except Exception as e:
-                print(f"  ✗ {source_name}: error - {e}")
+                print(f"  Error processing {filename}: {e}")
+                continue
         
-        # Save chunks to JSON
-        if all_chunks:
-            output_path = os.path.join(self.processed_dir, "chunks.json")
-            with open(output_path, 'w', encoding='utf-8') as f:
-                json.dump(all_chunks, f, ensure_ascii=False, indent=2)
-            
-            print(f"\n✓ Created {len(all_chunks)} chunks")
-            print(f"✓ Saved to: {output_path}")
-        else:
-            print("\n⚠ No chunks created")
-        
-        return all_chunks
-
+        return documents, metadata
 
 def main():
-    """Process all scraped content."""
-    chunker = SimpleChunker()
-    chunker.process_all_files()
-
+    """Main function to run the chunking process."""
+    
+    # Parameters
+    input_folder = "data/raw"
+    output_folder = "data/chunks"
+    chunk_size = 200  # number of words per chunk
+    overlap_size = 50  # number of words to overlap between chunks
+    
+    # Initialize chunker
+    chunker = TextChunker(chunk_size=chunk_size, overlap_size=overlap_size)
+    
+    try:
+        # Process files and create chunks
+        documents, metadata = chunker.process_files(input_folder, output_folder)
+        
+        if not documents:
+            print("No documents were processed successfully.")
+            return
+        
+        print(f"\nSUMMARY:")
+        print(f"Total chunks created: {len(documents)}")
+        print(f"Source files processed: {len(set(m['source'] for m in metadata))}")
+        print(f"Chunks saved to: {output_folder}")
+        
+        # Save metadata summary
+        metadata_path = "chunks_metadata.json"
+        with open(metadata_path, "w", encoding="utf-8") as f:
+            json.dump(metadata, f, ensure_ascii=False, indent=2)
+        print(f"Metadata saved to: {metadata_path}")
+        
+        # Display statistics
+        word_counts = [m['word_count'] for m in metadata]
+        print(f"\nChunk Statistics:")
+        print(f"  Average words per chunk: {np.mean(word_counts):.1f}")
+        print(f"  Min words per chunk: {min(word_counts)}")
+        print(f"  Max words per chunk: {max(word_counts)}")
+        
+    except Exception as e:
+        print(f"Error during processing: {e}")
+        raise
 
 if __name__ == "__main__":
     main()
+
+

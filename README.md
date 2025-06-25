@@ -64,6 +64,58 @@ This will:
 2. Save the raw content as text files in `data/raw/`
 4. Process and chunk the content for later use in `data/processed/`
 
+### Generating Embeddings
+
+To generate embeddings for the chunked content:
+
+```
+python src/generate_embeddings.py
+```
+
+This will:
+1. Process all chunks in the `data/chunks/` directory
+2. Generate embeddings using the SentenceTransformer model
+3. Save individual embeddings in `data/embeddings/`
+4. Create FAISS-compatible embeddings in `data/embeddings/faiss/`
+
+## Using Hugging Face Models
+
+The chatbot uses Google's Gemma-2B model by default. If you want to use this model, you'll need to:
+
+1. Create a Hugging Face account if you don't have one: https://huggingface.co/join
+2. Accept the model license at https://huggingface.co/google/gemma-2b
+3. Create an access token at https://huggingface.co/settings/tokens
+4. Copy the `.env.template` file to `.env` and add your token:
+   ```
+   cp .env.template .env
+   ```
+   Then edit the `.env` file to add your token:
+   ```
+   HUGGINGFACE_TOKEN=your_actual_token_here
+   ```
+
+If you don't provide a token, the system will automatically fall back to TinyLlama, which is a smaller, non-gated model.
+
+### Running the RAG Chatbot
+
+To run the chatbot from the command line:
+
+```
+python src/rag_chatbot.py
+```
+
+This will start a simple CLI interface where you can ask questions about DCC Dialysis.
+
+### Running the Web UI
+
+To run the chatbot with a web interface:
+
+```
+streamlit run app.py
+```
+
+This will start a Streamlit web server, and you can access the chatbot through your browser.
+
 ## License
 
-This project is for educational purposes only. The content jis gotten from scraping https://dccdialysis.com/ .
+This project is for educational purposes only. The content is gotten from scraping https://dccdialysis.com/ .

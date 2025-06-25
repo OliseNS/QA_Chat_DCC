@@ -1,0 +1,6 @@
+{
+  "chunk_id": "chunk_001",
+  "category": "dialysis-centers-locations",
+  "file_path": "C:\\Users\\default.LAPTOP-3RO2LG6Q\\Documents\\GitHub\\QA_Chat\\data\\chunks\\dialysis-centers-locations\\chunk_001.txt",
+  "content": "There appear to be more locations available on the website (indicated by pagination showing \"12345678910Next\"), but the website uses dynamic loading which makes it difficult to scrape all locations in a single request. The locations shown here represent the first page of results. Contact Information:\n- General Admissions: 844-466-3436\n- Alternative Contact: 309-808-4352\n- Email: admissions@dccdialysis.com"
+}

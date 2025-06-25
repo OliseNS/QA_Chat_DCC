@@ -1,0 +1,52 @@
+DIALYSIS CENTER LOCATIONS
+
+Based on data from https://dccdialysis.com/search-by-city/
+
+==================================================
+
+DIALYSIS CARE CENTER BEVERLY
+Address: 10801 S. Western Ave, Suite 100, Chicago, IL 60643
+Phone: 708-741-1606
+Fax: 708-741-1609
+Services: In-Center Hemodialysis
+State: ILLINOIS
+
+==================================================
+
+DIALYSIS CARE CENTER BROOKSVILLE
+Address: 7179 S Broad St, Brooksville, FL, 34601
+Phone: 352-631-7300
+Fax: 352-631-7301
+Services: In-Center Hemodialysis
+State: FLORIDA
+
+==================================================
+
+DIALYSIS CARE CENTER CAMP HILL HOME
+Address: 205 Grandview Avenue, Camp Hill, PA, 17011
+Phone: 717-910-1400
+Fax: 717-910-1401
+Services: Home Hemodialysis, Peritoneal Dialysis
+State: PENNSYLVANIA
+
+==================================================
+
+DIALYSIS CARE CENTER CHAMBERSBURG
+Address: 20 Parkwood Dr., Suite 1, Chambersburg, PA 17201
+Phone: 717-401-2060
+Fax: 717-401-2061
+Services: Peritoneal Dialysis, Home Hemodialysis, In-Center Hemodialysis
+State: PENNSYLVANIA
+
+==================================================
+
+DIALYSIS CARE CENTER CLEVELAND
+Address: 905 Clingan Ridge Drive Northwest, Cleveland, TN, 37312
+Phone: 423-476-6166
+Fax: 423-559-9428
+Services: Peritoneal Dialysis, Home Hemodialysis, In-Center Hemodialysis
+State: TENNESSEE
+
+==================================================
+
+Note: This list contains the locations that were successfully extracted. There appear to be more locations available on the website (indicated by pagination showing "12345678910Next"), but the website uses dynamic loading which makes it difficult to scrape all locations in a single request. The locations shown here represent the first page of results.

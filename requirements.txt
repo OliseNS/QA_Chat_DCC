@@ -3,17 +3,21 @@
 requests>=2.31.0
 beautifulsoup4>=4.12.0
 
-# Data processing (for future RAG implementation)
+# Data processing (for RAG implementation)
 numpy>=1.24.0
 pandas>=2.0.0
 
-# Machine Learning / NLP (for future RAG implementation)
+# Machine Learning / NLP (for RAG implementation)
 torch>=2.0.0
 transformers>=4.30.0
 sentence-transformers>=2.2.0
+nltk>=3.8.0
 
-# Vector database (for future RAG implementation)
+# Vector database (for RAG implementation)
 faiss-cpu>=1.7.4
+
+# UI & Application
+streamlit>=1.23.0
 
 # Utility packages
 tqdm>=4.65.0

@@ -1,0 +1,39 @@
+# Python virtual environment
+venv/
+env/
+ENV/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Environment variables
+.env
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VS Code settings
+.vscode/
+
+# Model files that might be large
+*.pt
+*.pth
+*.bin
+*.onnx
+
+# Temporary files
+*.log
+*.tmp
+
+
+
+# Operating System files
+.DS_Store
+Thumbs.db
