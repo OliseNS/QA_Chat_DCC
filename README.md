@@ -1,4 +1,4 @@
-# RAG Chatbot for DCC Dialysis
+# Question and Answer chatbot for the Dialysis Care Center
 
 A simple chatbot that answers questions using content from https://dccdialysis.com/ using RAG (Retrieval-Augmented Generation) and Hugging Face models.
 
