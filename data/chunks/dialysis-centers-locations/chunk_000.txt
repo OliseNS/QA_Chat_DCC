@@ -4,7 +4,7 @@ Based on data from https://dccdialysis.com/search-by-city/
 
 ==================================================
 
-DIALYSIS CARE CENTER BEVERLY
+DIALYSIS CARE CENTER BEVERLY Location
 Address: 10801 S. Western Ave, Suite 100, Chicago, IL 60643
 Phone: 708-741-1606
 Fax: 708-741-1609
@@ -13,7 +13,7 @@ State: ILLINOIS
 
 ==================================================
 
-DIALYSIS CARE CENTER BROOKSVILLE
+DIALYSIS CARE CENTER BROOKSVILLE Location
 Address: 7179 S Broad St, Brooksville, FL, 34601
 Phone: 352-631-7300
 Fax: 352-631-7301
@@ -22,7 +22,7 @@ State: FLORIDA
 
 ==================================================
 
-DIALYSIS CARE CENTER CAMP HILL HOME
+DIALYSIS CARE CENTER CAMP HILL HOME Location
 Address: 205 Grandview Avenue, Camp Hill, PA, 17011
 Phone: 717-910-1400
 Fax: 717-910-1401
@@ -31,7 +31,7 @@ State: PENNSYLVANIA
 
 ==================================================
 
-DIALYSIS CARE CENTER CHAMBERSBURG
+DIALYSIS CARE CENTER CHAMBERSBURG Location
 Address: 20 Parkwood Dr., Suite 1, Chambersburg, PA 17201
 Phone: 717-401-2060
 Fax: 717-401-2061
@@ -40,7 +40,7 @@ State: PENNSYLVANIA
 
 ==================================================
 
-DIALYSIS CARE CENTER CLEVELAND
+DIALYSIS CARE CENTER CLEVELAND Location
 Address: 905 Clingan Ridge Drive Northwest, Cleveland, TN, 37312
 Phone: 423-476-6166
 Fax: 423-559-9428
@@ -49,4 +49,8 @@ State: TENNESSEE
 
 ==================================================
 
-Note: This list contains the locations that were successfully extracted. There appear to be more locations available on the website (indicated by pagination showing "12345678910Next"), but the website uses dynamic loading which makes it difficult to scrape all locations in a single request. The locations shown here represent the first page of results.
+
+Contact Information:
+- General Admissions: 844-466-3436
+- Alternative Contact: 309-808-4352
+- Email: admissions@dccdialysis.com

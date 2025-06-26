@@ -1,0 +1,80 @@
+{
+    "app_info": {
+        "title": "Dialysis Care Center Assistant",
+        "description": "Your AI-powered guide to dialysis care and treatment options",
+        "version": "1.0.0",
+        "developer": {
+            "name": "Olisemeka Nmarkwe",
+            "title": "AI & Healthcare Solutions Developer",
+            "contact": "olisemeka.dev"
+        }
+    },
+    "tech_stack": {
+        "ai_ml": {
+            "embedding_model": "all-MiniLM-L6-v2",
+            "vector_db": "FAISS",
+            "llm_api": "OpenRouter (Gemma-3)",
+            "architecture": "RAG (Retrieval-Augmented Generation)"
+        },
+        "backend": {
+            "language": "Python 3.10+",
+            "data_processing": ["NumPy", "Pandas"],
+            "web_scraping": ["Requests", "BeautifulSoup4"],
+            "ml_libraries": ["Sentence Transformers", "Transformers", "PyTorch"]
+        },
+        "frontend": {
+            "framework": "Streamlit",
+            "features": ["Real-time Chat", "Context Visualization", "Interactive Settings", "Session Management"]
+        },
+        "data_pipeline": {
+            "scraping": "DCC Website Content",
+            "processing": "Text Chunking & Embeddings",
+            "storage": ["JSON Configuration", "FAISS Index", "Text Chunks"]
+        }
+    },
+    "sample_questions": [
+        "What types of dialysis treatment does DCC offer?",
+        "How do I prepare for my first dialysis session?",
+        "What are the benefits of home hemodialysis?",
+        "What insurance does DCC accept?",
+        "Tell me about DCC's mission and values",
+        "What is the difference between hemodialysis and peritoneal dialysis?",
+        "How often do I need dialysis treatments?",
+        "What should I bring to my dialysis appointment?"
+    ],
+    "ui_settings": {
+        "default_context_expanded": false,
+        "show_context_info": true,
+        "show_advanced_metrics": false,
+        "response_style": "detailed",
+        "theme": {
+            "primary_color": "#007bff",
+            "secondary_color": "#6c757d",
+            "success_color": "#28a745",
+            "warning_color": "#ffc107",
+            "danger_color": "#dc3545",
+            "background_color": "#ffffff",
+            "text_color": "#000000",
+            "sidebar_bg": "#ffffff",
+            "card_shadow": "0 1px 3px rgba(0, 0, 0, 0.1)",
+            "border_radius": "5px"
+        },
+        "animations": {
+            "enable_transitions": true,
+            "transition_speed": "0.3s"
+        },
+        "layout": {
+            "sidebar_collapsed_default": true,
+            "show_footer": true,
+            "max_width": "1200px"
+        }
+    },
+    "features": {
+        "feedback_system": true,
+        "download_chat": true,
+        "session_stats": true,
+        "sample_questions": true,
+        "advanced_context": true,
+        "copy_responses": true
+    }
+}

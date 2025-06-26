@@ -1,4 +1,0 @@
-There appear to be more locations available on the website (indicated by pagination showing "12345678910Next"), but the website uses dynamic loading which makes it difficult to scrape all locations in a single request. The locations shown here represent the first page of results. Contact Information:
-- General Admissions: 844-466-3436
-- Alternative Contact: 309-808-4352
-- Email: admissions@dccdialysis.com
