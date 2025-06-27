@@ -1,11 +1,11 @@
 {
     "app_info": {
         "title": "Dialysis Care Center Assistant",
-        "description": "Your AI-powered guide to dialysis care and treatment options",
+        "description": "Hi! I'm Alex, your friendly guide to dialysis care and treatment options. Ask me anything!",
         "version": "1.0.0",
         "developer": {
             "name": "Olisemeka Nmarkwe",
-            "title": "AI & Healthcare Solutions Developer",
+            "title": "AI and ML Developer",
             "contact": "olisemeka.dev"
         }
     },
@@ -34,13 +34,13 @@
     },
     "sample_questions": [
         "What types of dialysis treatment does DCC offer?",
-        "How do I prepare for my first dialysis session?",
-        "What are the benefits of home hemodialysis?",
-        "What insurance does DCC accept?",
+        "I'm new to dialysis - what should I expect?",
+        "Can I do dialysis at home? What are my options?",
+        "How do I contact DCC for more information?",
         "Tell me about DCC's mission and values",
-        "What is the difference between hemodialysis and peritoneal dialysis?",
-        "How often do I need dialysis treatments?",
-        "What should I bring to my dialysis appointment?"
+        "What's the difference between hemodialysis and peritoneal dialysis?",
+        "How often will I need treatments?",
+        "What should I bring to my first appointment?"
     ],
     "ui_settings": {
         "default_context_expanded": false,

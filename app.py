@@ -25,23 +25,61 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Set clean styling
+# Set clean styling and force light mode for ALL devices and browsers
 st.markdown("""
 <style>
+    /* FORCE LIGHT MODE - Complete Override */
+    html, body, .stApp, .main, .block-container,
+    [data-testid="stAppViewContainer"], 
+    [data-testid="stHeader"], 
+    [data-testid="stSidebar"],
+    [data-testid="stSidebarContent"] {
+        background-color: white !important;
+        color: black !important;
+    }
+    
+    /* Force light mode for all color schemes */
+    @media (prefers-color-scheme: dark) {
+        html, body, .stApp, .main, .block-container,
+        [data-testid="stAppViewContainer"], 
+        [data-testid="stHeader"], 
+        [data-testid="stSidebar"],
+        [data-testid="stSidebarContent"] {
+            background-color: white !important;
+            color: black !important;
+        }
+        
+        /* Override any dark mode text */
+        *, *:before, *:after {
+            background-color: white !important;
+            color: black !important;
+        }
+        
+        /* Specific dark mode overrides */
+        .stMarkdown, .stText, p, div, span, label, h1, h2, h3, h4, h5, h6 {
+            color: black !important;
+        }
+    }
+    
+    /* Force light mode for mobile devices */
+    @media (max-width: 768px) {
+        html, body, .stApp, .main, .block-container {
+            background-color: white !important;
+            color: black !important;
+        }
+    }
+    
     /* Brand colors */
     :root {
         --dcc-red: rgb(171, 35, 40);
         --light-gray: #f8f9fa;
     }
     
-    /* Main app background */
-    .stApp {
-        background: white !important;
-    }
-    
-    /* Sidebar styling */
-    [data-testid="stSidebar"] {
-        background: white !important;
+    /* Override system dark mode completely */
+    [data-theme="dark"], 
+    [data-theme="dark"] * {
+        background-color: white !important;
+        color: black !important;
     }
     
     /* Logo container margin */
@@ -88,51 +126,206 @@ st.markdown("""
     
     /* Chat messages */
     [data-testid="stChatMessage"] {
-        background: white;
+        background: white !important;
         border-radius: 12px;
         padding: 1rem;
         margin: 1rem 0;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         border: 1px solid #eee;
+        color: black !important;
     }
     
-    /* Chat input - use default Streamlit styling */
+    /* Force chat message text color */
+    [data-testid="stChatMessage"] *,
+    [data-testid="stChatMessage"] p,
+    [data-testid="stChatMessage"] div,
+    [data-testid="stChatMessage"] span {
+        color: black !important;
+        background-color: white !important;
+    }
     
     /* Headers */
     h1, h2, h3 {
-        color: var(--dcc-red);
+        color: var(--dcc-red) !important;
     }
     
-    /* Text visibility */
-    p, div, span, label {
+    /* Text visibility - force black on white everywhere */
+    p, div, span, label, text {
         color: black !important;
+        background-color: white !important;
     }
     
-    /* Tooltips - better visibility */
-    .stTooltip,
-    [data-testid="stTooltipHoverTarget"],
-    [data-baseweb="tooltip"] {
+    /* Input fields - Force black text and white background */
+    input, textarea, select {
+        background-color: white !important;
         color: black !important;
-        background: white !important;
-        border: 2px solid black !important;
-        border-radius: 4px !important;
-        padding: 0.5rem !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+        border: 1px solid #ccc !important;
+    }
+    
+    /* Chat input specifically - Enhanced visibility */
+    [data-testid="stChatInput"] input,
+    [data-testid="stChatInput"] textarea,
+    .stChatInput input,
+    .stChatInput textarea {
+        background-color: white !important;
+        color: black !important;
+        border: 2px solid #007bff !important;
+        font-size: 16px !important;
         font-weight: 500 !important;
-        z-index: 9999 !important;
+        padding: 12px !important;
+        border-radius: 8px !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
     }
     
-    /* Expander */
+    /* Focus state for chat input */
+    [data-testid="stChatInput"] input:focus,
+    [data-testid="stChatInput"] textarea:focus,
+    .stChatInput input:focus,
+    .stChatInput textarea:focus {
+        border-color: #0056b3 !important;
+        box-shadow: 0 0 0 3px rgba(0,123,255,0.25) !important;
+        outline: none !important;
+    }
+    
+    /* Text areas */
+    .stTextArea textarea {
+        background-color: white !important;
+        color: black !important;
+        border: 1px solid #ddd !important;
+    }
+    
+    /* Override any input placeholder text - Enhanced visibility */
+    input::placeholder,
+    textarea::placeholder {
+        color: #666 !important;
+        opacity: 1 !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+    }
+    
+    /* Specific placeholder for chat input */
+    [data-testid="stChatInput"] input::placeholder,
+    [data-testid="stChatInput"] textarea::placeholder {
+        color: #888 !important;
+        font-style: italic !important;
+    }
+    
+    /* Expander - make header more visible when collapsed */
     [data-testid="stExpander"] {
         border: 1px solid #ddd;
         border-radius: 8px;
-        background: white;
+        background: white !important;
     }
     
     .streamlit-expanderHeader {
-        background: var(--light-gray);
-        color: var(--dcc-red);
-        font-weight: bold;
+        background: var(--light-gray) !important;
+        color: var(--dcc-red) !important;
+        font-weight: bold !important;
+    }
+    
+    /* Force expander content colors */
+    [data-testid="stExpander"] * {
+        color: black !important;
+        background-color: white !important;
+    }
+    
+    /* Code and text areas */
+    .stTextArea textarea,
+    code, pre {
+        background-color: #f8f9fa !important;
+        color: black !important;
+        border: 1px solid #ddd !important;
+    }
+    
+    /* Additional chat input targeting - Enhanced visibility */
+    [data-baseweb="input"] input,
+    [data-baseweb="textarea"] textarea,
+    div[data-baseweb="input"] input,
+    div[data-baseweb="textarea"] textarea {
+        background-color: white !important;
+        color: black !important;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        border: 2px solid #007bff !important;
+        border-radius: 8px !important;
+        padding: 12px !important;
+    }
+    
+    /* Chat input container styling */
+    [data-testid="stChatInputContainer"] {
+        background-color: white !important;
+        border-radius: 10px !important;
+        padding: 4px !important;
+        border: 2px solid #007bff !important;
+        margin: 8px 0 !important;
+    }
+    
+    /* Streamlit chat input container */
+    .st-emotion-cache-* input {
+        color: black !important;
+        background-color: white !important;
+    }
+    
+    /* Target all input elements with more specificity */
+    * input[type="text"],
+    * input[type="search"],
+    * textarea {
+        color: black !important;
+        background-color: white !important;
+        -webkit-text-fill-color: black !important;
+    }
+    
+    /* Force input text visibility with highest priority - Enhanced */
+    input, textarea {
+        color: black !important;
+        background: white !important;
+        -webkit-text-fill-color: black !important;
+        font-size: 16px !important;
+        line-height: 1.5 !important;
+        font-weight: 500 !important;
+    }
+    
+    /* Ensure chat input is always visible */
+    div[data-testid="stChatInput"] {
+        background-color: white !important;
+        border-radius: 10px !important;
+        border: 2px solid #007bff !important;
+        margin: 16px 0 !important;
+        padding: 4px !important;
+    }
+    
+    /* Chat input text area specific targeting */
+    div[data-testid="stChatInput"] > div > div > div > textarea,
+    div[data-testid="stChatInput"] textarea {
+        background-color: white !important;
+        color: black !important;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        border: none !important;
+        min-height: 40px !important;
+    }
+    
+    /* Additional targeting for all possible chat input selectors */
+    .st-emotion-cache-1c7y2kd textarea,
+    .st-emotion-cache-1ec6rqw textarea,
+    [data-testid="chatInput"] textarea,
+    [data-testid="stChatInput"] [role="textbox"],
+    div[role="textbox"][data-testid="stChatInput"] {
+        background-color: white !important;
+        color: black !important;
+        -webkit-text-fill-color: black !important;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        border: 2px solid #007bff !important;
+        border-radius: 8px !important;
+        padding: 12px !important;
+        min-height: 44px !important;
+    }
+    
+    /* Ensure proper contrast and visibility */
+    * {
+        -webkit-text-size-adjust: 100% !important;
+        text-size-adjust: 100% !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -157,29 +350,34 @@ def load_retriever():
         st.error(f"Error loading RAG retriever: {str(e)}")
         return None
 
-# Function to search for relevant documents using improved retriever
-def search_documents_improved(query, retriever, top_k=3):
-    """Search for relevant documents using the RAG retriever."""
+def search_documents_improved(query, retriever, top_k=4):
+    """Search for relevant documents using the enhanced RAG retriever with quality filtering."""
     if retriever is None:
         return []
     
     try:
-        results = retriever.search(query, top_k=top_k)
+        # Use enhanced retriever with optimized threshold for quality results
+        results = retriever.search(query, top_k=top_k * 2, similarity_threshold=0.15)
         
-        # Convert to expected format for compatibility
-        formatted_results = []
+        # Quality filtering: ensure we have meaningful results
+        quality_results = []
         for result in results:
-            formatted_result = {
-                "text": result['content'],  # Use 'content' field from retriever
-                "source": result['category'],  # Use 'category' as source
-                "distance": 1.0 - result['similarity'],  # Convert similarity to distance
-                "similarity": result['similarity'],
-                "rerank_score": result['similarity']
-            }
-            formatted_results.append(formatted_result)
+            # Filter out very low-quality matches
+            if result['similarity'] >= 0.25:
+                formatted_result = {
+                    "text": result['content'],
+                    "source": result['category'],
+                    "distance": 1.0 - result['similarity'],
+                    "similarity": result['similarity'],
+                    "rerank_score": result['similarity'],
+                    "semantic_score": result.get('semantic_score', 0.0),
+                    "keyword_score": result.get('keyword_score', 0.0)
+                }
+                quality_results.append(formatted_result)
         
-        return formatted_results
-    
+        # Return top results, ensuring we have at least some context
+        return quality_results[:top_k] if quality_results else results[:top_k]
+        
     except Exception as e:
         st.error(f"Error in improved search: {e}")
         return []
@@ -206,7 +404,7 @@ def get_embedding(query):
         return None
 
 # Function to call OpenRouter API with streaming support
-def call_openrouter_api(messages, temperature=0.7, stream=False):
+def call_openrouter_api(messages, temperature=0.3, stream=False):
     if not OPENROUTER_API_KEY or OPENROUTER_API_KEY == "your_openrouter_api_key_here":
         return """
 🔑 **API Key Required**
@@ -390,7 +588,7 @@ with st.sidebar:
                   margin-bottom: 1rem;
                   text-align: center;
                   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);">
-            📋 About This Assistant
+            � About Alex (Your Assistant)
         </h4>
         <p style="font-size: 1rem; 
                  color: #495057; 
@@ -398,7 +596,7 @@ with st.sidebar:
                  line-height: 1.6;
                  font-weight: 500;
                  text-align: center;">
-            This AI assistant helps answer questions about dialysis care and services offered by Dialysis Care Center. The assistant uses real information from DCC resources.
+            I'm Alex, your friendly AI assistant trained on real information from Dialysis Care Center. I'm here to help you understand dialysis care in a way that actually makes sense - no medical jargon, just straight talk about what you need to know.
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -441,13 +639,13 @@ st.markdown("""
               font-weight: 800; 
               margin-bottom: 1rem;
               color: rgb(171, 35, 40);">
-        💬 Dialysis Care Center Assistant
+        💬 Hey there! I'm Alex, your DCC assistant
     </h1>
     <p style="color: black; 
              margin-top: 1rem; 
              font-size: 1.3rem; 
              font-weight: 500;">
-        Your AI-powered guide to dialysis care and treatment options
+        Here to help you understand dialysis care in simple, friendly terms
     </p>
     <div style="margin-top: 1.5rem; 
                padding: 1rem; 
@@ -458,7 +656,7 @@ st.markdown("""
                  font-weight: 600; 
                  margin: 0;
                  font-size: 1.1rem;">
-            🎯 Ask me anything about dialysis treatments, procedures, and care options!
+            🎯 Got questions about dialysis? I'm here to help - just ask me anything!
         </p>
     </div>
 </div>
@@ -471,103 +669,91 @@ with col2:
         st.session_state.messages = []
         st.session_state.chat_history = []
         st.session_state.context_data = []
-        st.rerun()# Display chat messages
+        st.session_state.message_contexts = {}
+        st.rerun()# Initialize a list to store context data for each message
+if "message_contexts" not in st.session_state:
+    st.session_state.message_contexts = {}
+
+# Display chat messages
 for i, message in enumerate(st.session_state.messages):
     with st.chat_message(message["role"]):
         st.write(message["content"])
         
-        # Show context information after assistant messages
-        if (message["role"] == "assistant" and 
-            st.session_state.context_data and 
-            i == len(st.session_state.messages) - 1):  # Only for the latest assistant message
+        # Show context information after assistant messages (always show for all assistant messages)
+        if message["role"] == "assistant":
+            # Get context for this specific message
+            message_context = st.session_state.message_contexts.get(i, [])
             
+            # Always show the expander for assistant messages
             st.markdown("---")
-            with st.expander("📚 View Source Information", expanded=False):
-                for j, context in enumerate(st.session_state.context_data):
-                    st.markdown(f"""
-                    <div style="background: white; border-radius: 10px; padding: 1.2rem; 
-                                margin-bottom: 1.2rem; border: 2px solid rgba(171, 35, 40, 0.2);">
-                        <h4 style="margin-top: 0; color: rgb(171, 35, 40); font-size: 1.1rem; font-weight: 600;">{context['source']}</h4>
-                        <span style="display: inline-block; background: rgba(171, 35, 40, 0.15); 
-                                    color: rgb(171, 35, 40); border-radius: 999px; padding: 0.3rem 0.8rem;
-                                    font-size: 0.85rem; font-weight: 600; margin-bottom: 0.6rem;">
-                            Relevance: {1.0 - context['distance']:.2f}
-                        </span>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                    # Use a cleaner text area without tooltips
-                    st.text_area("Source Content", 
-                                 context["text"], 
-                                 height=150, 
-                                 key=f"ctx_{i}_{j}")
-                    
-                    if j < len(st.session_state.context_data) - 1:
-                        st.markdown("<hr style='margin: 1rem 0; opacity: 0.2;'>", unsafe_allow_html=True)
+            with st.expander("📚 View Source Information", expanded=False):  # Collapsed by default
+                if message_context:
+                    for j, context in enumerate(message_context):
+                        semantic_score = context.get('semantic_score', 0.0)
+                        keyword_score = context.get('keyword_score', 0.0)
+                        
+                        st.markdown(f"""
+                        <div style="background: white; border-radius: 10px; padding: 1.2rem; 
+                                    margin-bottom: 1.2rem; border: 2px solid rgba(171, 35, 40, 0.2);">
+                            <h4 style="margin-top: 0; color: rgb(171, 35, 40); font-size: 1.1rem; font-weight: 600;">{context['source']}</h4>
+                            <div style="display: flex; gap: 1rem; margin-bottom: 0.8rem;">
+                                <span style="display: inline-block; background: rgba(171, 35, 40, 0.15); 
+                                            color: rgb(171, 35, 40); border-radius: 999px; padding: 0.3rem 0.8rem;
+                                            font-size: 0.85rem; font-weight: 600;">
+                                    Overall: {context['similarity']:.2f}
+                                </span>
+                                <span style="display: inline-block; background: rgba(34, 139, 34, 0.15); 
+                                            color: rgb(34, 139, 34); border-radius: 999px; padding: 0.3rem 0.8rem;
+                                            font-size: 0.85rem; font-weight: 600;">
+                                    Semantic: {semantic_score:.2f}
+                                </span>
+                                <span style="display: inline-block; background: rgba(255, 140, 0, 0.15); 
+                                            color: rgb(255, 140, 0); border-radius: 999px; padding: 0.3rem 0.8rem;
+                                            font-size: 0.85rem; font-weight: 600;">
+                                    Keyword: {keyword_score:.2f}
+                                </span>
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                        
+                        # Use a cleaner text area without tooltips
+                        st.text_area("Source Content", 
+                                     context["text"], 
+                                     height=120, 
+                                     key=f"ctx_msg_{i}_{j}")
+                        
+                        if j < len(message_context) - 1:
+                            st.markdown("<hr style='margin: 1rem 0; opacity: 0.2;'>", unsafe_allow_html=True)
+                else:
+                    # Show a message when no context is available (this shouldn't happen normally)
+                    st.warning("⚠️ No source information available for this response.")
 
-# Enhanced system prompt with better prompt engineering
-ENHANCED_SYSTEM_PROMPT = """You are an expert dialysis care specialist and patient advocate at Dialysis Care Center (DCC). Your role is to provide comprehensive, accurate, and compassionate guidance about dialysis treatments and care options.
+# Enhanced system prompt with better prompt engineering for high-quality responses
+ENHANCED_SYSTEM_PROMPT = """You are Alex, a knowledgeable dialysis care assistant at Dialysis Care Center.
 
-## Core Identity & Expertise:
-- Expert knowledge in all dialysis modalities (hemodialysis, peritoneal dialysis, home treatments)
-- Deep understanding of patient care, treatment planning, and quality of life considerations
-- Empathetic advocate who prioritizes patient education and empowerment
-- Professional healthcare communicator with 15+ years of experience
+RULES:
+- Answer using ONLY the knowledge base below - this contains real DCC information
+- Be thorough and detailed when information IS available in the sources
+- If sources lack specific details: "For more details about [topic], contact DCC directly"
+- Use clear formatting: bullet points, **bold** for emphasis
+- Explain medical terms simply
 
-## Knowledge Base Context:
+KNOWLEDGE BASE:
 {context_str}
 
-## Response Framework (Use this structure):
+Answer comprehensively using the above sources."""
 
-### 1. IMMEDIATE RESPONSE
-- Directly address the user's question with key information upfront
-- Use clear, jargon-free language that patients can understand
-
-### 2. DETAILED EXPLANATION
-- Provide comprehensive details organized with headers and bullet points
-- Include relevant medical context when appropriate
-- Explain "why" behind recommendations, not just "what"
-
-### 3. PRACTICAL GUIDANCE
-- Offer actionable next steps or considerations
-- Include lifestyle impact information when relevant
-- Mention when to consult healthcare providers
-
-### 4. SUPPORTIVE CLOSURE
-- Acknowledge the emotional aspect of dialysis decisions
-- Reinforce that help and support are available
-- End with encouragement or reassurance when appropriate
-
-## Communication Guidelines:
-✅ DO:
-- Use warm, professional, and empathetic tone
-- Explain medical terms in simple language
-- Provide specific, actionable information
-- Acknowledge uncertainty when information is incomplete
-- Use "you" to make responses personal and direct
-- Include emotional support and encouragement
-- Structure responses for easy scanning (headers, bullets)
-
-❌ DON'T:
-- Create fake contact information, phone numbers, or specific scheduling details
-- Make definitive medical diagnoses or treatment decisions
-- Use overly technical medical jargon without explanation
-- Provide outdated or generalized information
-- Rush through explanations - take time to be thorough
-- Ignore the emotional impact of dialysis on patients and families
-
-## Response Quality Standards:
-- Accuracy: Base all information on provided knowledge base
-- Clarity: Write at an 8th-grade reading level
-- Completeness: Address all aspects of the user's question
-- Compassion: Acknowledge the challenges patients face
-- Practicality: Include actionable information when possible
-
-Remember: You're not just providing information - you're supporting someone through one of the most significant healthcare decisions they may face. Every response should reflect expertise, empathy, and genuine care for the patient's wellbeing."""
-
-# Function to create enhanced system message
+# Function to create enhanced system message with safety fallback
 def create_enhanced_system_message(context_str):
-    return ENHANCED_SYSTEM_PROMPT.format(context_str=context_str)
+    base_prompt = ENHANCED_SYSTEM_PROMPT.format(context_str=context_str)
+    
+    # Add contact info if context is very limited
+    if len(context_str.strip()) < 150:
+        base_prompt += f"""
+
+LOW CONTEXT ALERT: Provide available info, then suggest: Phone [844-466-3436](tel:844-466-3436) | Email [admissions@dccdialysis.com](mailto:admissions@dccdialysis.com)"""
+    
+    return base_prompt
 
 # Process sample question if flag is set
 if "process_sample_question" in st.session_state and st.session_state.process_sample_question:
@@ -580,6 +766,9 @@ if "process_sample_question" in st.session_state and st.session_state.process_sa
     
     # Show a spinner while processing
     with st.spinner("Thinking..."):
+        # Initialize context_data as empty list
+        context_data = []
+        
         # Check if retriever is loaded
         if retriever is None:
             response = """
@@ -598,7 +787,7 @@ The knowledge base is not accessible. This usually means:
             """
         else:
             # Search for relevant context using improved retriever
-            context_data = search_documents_improved(user_input, retriever, top_k=3)
+            context_data = search_documents_improved(user_input, retriever, top_k=4)
             st.session_state.context_data = context_data
             
             # Prepare context for the LLM
@@ -615,7 +804,7 @@ The knowledge base is not accessible. This usually means:
                 messages.append(msg)
             
             # Get streaming response from OpenRouter
-            response_stream = call_openrouter_api(messages, temperature=0.7, stream=True)
+            response_stream = call_openrouter_api(messages, temperature=0.3, stream=True)
             
             # Display assistant message with streaming
             with st.chat_message("assistant"):
@@ -631,12 +820,19 @@ The knowledge base is not accessible. This usually means:
                 message_placeholder.markdown(full_response)
                 response = full_response
         
+        # Store context for this specific assistant message BEFORE adding the message
+        assistant_message_index = len(st.session_state.messages)  # Index of the assistant message that will be added
+        st.session_state.message_contexts[assistant_message_index] = context_data
+        
         # Add assistant message to chat history
         st.session_state.messages.append({"role": "assistant", "content": response})
         st.session_state.chat_history.append({"role": "assistant", "content": response})
+        
+        # Trigger rerun to show the context immediately
+        st.rerun()
 
 # Input for new message
-user_input = st.chat_input("Ask me about dialysis treatments and care options...")
+user_input = st.chat_input("What would you like to know about dialysis? 😊")
 
 # Process user input
 if user_input:
@@ -650,6 +846,9 @@ if user_input:
     
     # Show a spinner while processing
     with st.spinner("Thinking..."):
+        # Initialize context_data as empty list
+        context_data = []
+        
         # Check if retriever is loaded
         if retriever is None:
             response = """
@@ -668,7 +867,7 @@ The knowledge base is not accessible. This usually means:
             """
         else:
             # Search for relevant context using improved retriever
-            context_data = search_documents_improved(user_input, retriever, top_k=3)
+            context_data = search_documents_improved(user_input, retriever, top_k=4)
             st.session_state.context_data = context_data
             
             # Prepare context for the LLM
@@ -687,7 +886,7 @@ The knowledge base is not accessible. This usually means:
             # Try streaming response first, fall back to regular if it fails
             try:
                 # Get streaming response from OpenRouter
-                response_stream = call_openrouter_api(messages, temperature=0.7, stream=True)
+                response_stream = call_openrouter_api(messages, temperature=0.3, stream=True)
                 
                 # Display assistant message with streaming
                 with st.chat_message("assistant"):
@@ -706,13 +905,20 @@ The knowledge base is not accessible. This usually means:
             except Exception as e:
                 # Fall back to regular API call if streaming fails
                 st.warning("Streaming failed, using regular response...")
-                response = call_openrouter_api(messages, temperature=0.7, stream=False)
+                response = call_openrouter_api(messages, temperature=0.3, stream=False)
                 with st.chat_message("assistant"):
                     st.write(response)
+        
+        # Store context for this specific assistant message BEFORE adding the message
+        assistant_message_index = len(st.session_state.messages)  # Index of the assistant message that will be added
+        st.session_state.message_contexts[assistant_message_index] = context_data
         
         # Add assistant message to chat history
         st.session_state.messages.append({"role": "assistant", "content": response})
         st.session_state.chat_history.append({"role": "assistant", "content": response})
+        
+        # Trigger rerun to show the context immediately
+        st.rerun()
 
 # Enhanced footer with improved visibility
 st.markdown("""
