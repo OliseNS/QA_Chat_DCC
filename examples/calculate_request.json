@@ -1,0 +1,7 @@
+{
+  "type": "bmi",
+  "parameters": {
+    "weight_kg": 70,
+    "height_m": 1.75
+  }
+}

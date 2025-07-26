@@ -1,164 +1,308 @@
-# 💬 Dialysis Care Center Assistant
+# 🏥 Healthcare AI Assistant
 
-An AI-powered chatbot that helps patients understand dialysis care and treatment options using information from Dialysis Care Center (DCC). The application uses Retrieval-Augmented Generation (RAG) to provide accurate, contextual responses based on real DCC documentation.
+A full-stack Healthcare AI Assistant using Retrieval-Augmented Generation (RAG) and agentic reasoning to provide accurate medical information and assistance.
 
 ## 🚀 Features
 
-- **Intelligent Q&A**: Ask questions about dialysis treatments, procedures, and care options
-- **Real-time Search**: Semantic search through DCC knowledge base using sentence transformers
-- **Context Visualization**: View source documents and relevance scores for transparency
-- **Sample Questions**: Pre-built questions to get started quickly
-- **Modern UI**: Clean, responsive interface with DCC branding
+- **Intelligent Q&A**: Ask questions about medical policies, treatments, and procedures
+- **Document Processing**: Load and process PDF, HTML, and Markdown medical documents
+- **RAG Pipeline**: Retrieval-Augmented Generation for accurate, context-aware responses
+- **Medical Calculations**: Built-in calculator for BMI, dosage, and other medical calculations
+- **Document Summarization**: Summarize medical documents for quick understanding
+- **RESTful API**: Clean JSON API for integration with other applications
+- **Docker Support**: Containerized deployment for easy scaling
 
 ## 🛠️ Technology Stack
 
-- **Frontend**: Streamlit
+### Backend
+- **Framework**: Flask
 - **AI/ML**: Sentence Transformers, OpenRouter API (Gemma-3)
 - **Search**: FAISS vector database with semantic embeddings
-- **Backend**: Python 3.10+
-- **Data Processing**: NumPy, Scikit-learn
+- **Data Processing**: NumPy, Scikit-learn, PyPDF2, BeautifulSoup4
+- **Containerization**: Docker, Docker Compose
+
+### Frontend
+- **Framework**: Vanilla JavaScript (Single HTML file)
+- **UI Library**: Custom CSS with Material Icons
+- **Styling**: Modern gradient design with responsive layout
 
 ## 📦 Installation
 
 ### Prerequisites
 
 - Python 3.10 or higher
+- Docker and Docker Compose (optional but recommended)
 - OpenRouter API key (get one free at [openrouter.ai](https://openrouter.ai))
 
-### Quick Setup
+### Quick Setup with Docker (Recommended)
 
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd QA_Chat
+   cd healthcare-ai-assistant
    ```
 
-2. **Install dependencies**
+2. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env and add your OpenRouter API key
+   ```
+
+3. **Build and run with Docker Compose**
+   ```bash
+   docker-compose up --build
+   ```
+
+4. **Access the application**
+   - Backend API: http://localhost:5000
+   - Frontend UI: http://localhost:5000 (served from the backend)
+
+### Manual Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd healthcare-ai-assistant
+   ```
+
+2. **Create a virtual environment**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install dependencies**
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Set up environment variables**
-   - Open the `.env` file
-   - Replace `your_openrouter_api_key_here` with your actual OpenRouter API key
-   ```env
-   OPENROUTER_API_KEY=your_actual_api_key_here
-   ```
-
-4. **Generate embeddings** (if not already present)
+4. **Set up environment variables**
    ```bash
-   python utils/generate_embeddings.py
+   cp .env.example .env
+   # Edit .env and add your OpenRouter API key
    ```
 
 5. **Run the application**
    ```bash
-   streamlit run app.py
+   python run_backend.py
    ```
 
-### Alternative Setup (Windows)
+## 📁 Project Structure
 
-You can also use the provided setup script:
-```cmd
-setup.bat
+```
+healthcare-ai-assistant/
+├── backend/                 # Backend Flask application
+│   ├── agents/             # AI agents with RAG and tools
+│   ├── routes/             # API routes and endpoints
+│   ├── utils/              # Utility functions
+│   ├── app.py             # Flask application factory
+│   └── config.py          # Configuration settings
+├── data/                  # Data directory
+│   ├── embeddings/        # Generated embeddings
+│   ├── chunks/            # Text chunks
+│   └── raw/               # Raw source files
+├── docs/                  # Medical documents for processing
+├── examples/              # Example API request payloads
+├── frontend/              # Frontend static files
+│   └── public/            # Publicly served files
+│       └── index.html     # Main frontend application
+├── uploads/               # Uploaded documents
+├── utils/                 # Data processing utilities
+├── .env.example          # Environment variables template
+├── .gitignore            # Git ignore file
+├── Dockerfile            # Docker configuration for backend
+├── Dockerfile.frontend   # Docker configuration for frontend (coming soon)
+├── docker-compose.yml    # Docker Compose configuration
+├── requirements.txt      # Python dependencies
+├── run_backend.py        # Backend entry point
+└── README.md             # This file
+```
+
+## 🔄 API Endpoints
+
+### Health Check
+```
+GET /api/health
+```
+
+### Chat
+```
+POST /api/chat
+Content-Type: application/json
+
+{
+  "message": "What are the symptoms of diabetes?",
+  "history": [
+    {"role": "user", "content": "Hello"},
+    {"role": "assistant", "content": "Hi, how can I help you today?"}
+  ]
+}
+```
+
+### Document Search
+```
+POST /api/search
+Content-Type: application/json
+
+{
+  "query": "treatment options for kidney disease",
+  "top_k": 5
+}
+```
+
+### Medical Calculator
+```
+POST /api/calculate
+Content-Type: application/json
+
+{
+  "type": "bmi",
+  "parameters": {
+    "weight_kg": 70,
+    "height_m": 1.75
+  }
+}
+```
+
+### Document Summarization
+```
+POST /api/summarize
+Content-Type: application/json
+
+{
+  "text": "Long medical document text here..."
+}
+```
+
+### Document Upload
+```
+POST /api/upload
+Content-Type: multipart/form-data
+
+file: [PDF/HTML/Markdown document]
 ```
 
 ## 🔧 Configuration
 
-### API Key Setup
+### Environment Variables
 
-1. Visit [openrouter.ai](https://openrouter.ai) and create an account
-2. Navigate to your dashboard and copy your API key
-3. Update the `.env` file with your key
-4. Restart the application
+Create a `.env` file based on `.env.example`:
 
-### Data Structure
+```env
+# OpenRouter API Key (required)
+OPENROUTER_API_KEY=your_openrouter_api_key_here
 
-The application expects this directory structure:
-```
-data/
-├── embeddings/
-│   └── faiss/
-│       ├── metadata.json
-│       └── embeddings.npy
-├── chunks/
-│   └── [category folders with text chunks]
-└── raw/
-    └── [raw text files]
+# Model settings
+LLM_MODEL=google/gemma-3-27b-it:free
+
+# Data directories
+DOCS_DIR=docs
+DATA_DIR=data
+EMBEDDINGS_DIR=data/embeddings/faiss
+
+# Flask settings
+SECRET_KEY=your-secret-key-here
+FLASK_DEBUG=False
+HOST=127.0.0.1
+PORT=5000
+
+# Logging settings
+LOG_LEVEL=INFO
+
+# Upload settings
+UPLOAD_FOLDER=uploads
+MAX_CONTENT_LENGTH=16777216
+
+# RAG settings
+CHUNK_SIZE=200
+OVERLAP_SIZE=50
+TOP_K_RESULTS=4
+SIMILARITY_THRESHOLD=0.15
 ```
 
 ## 📖 Usage
 
-### Basic Usage
+### Using the Frontend UI
 
-1. Open the application in your browser (usually `http://localhost:8501`)
-2. Use the test retrieval button to verify the system is working
-3. Click sample questions or type your own questions about dialysis care
-4. View source information in the expandable section below responses
+The application features a modern web interface that allows you to:
 
-### Sample Questions
+1. **Upload Medical Documents**:
+   - Click "Choose PDF File" to select a PDF document from your computer
+   - After selecting a file, click "Process PDF" to add it to the knowledge base
+   - You can also scrape medical websites by entering a URL and clicking "Scrape Website"
 
-- "What types of dialysis treatment does DCC offer?"
-- "How do I prepare for my first dialysis session?"
-- "What are the benefits of home hemodialysis?"
-- "Tell me about DCC's mission and values"
-- "How can I contact DCC?"
+2. **Chat with the AI Assistant**:
+   - Type your medical questions in the chat input at the bottom
+   - Press Enter or click "Send" to submit your question
+   - The assistant will provide answers based on the medical documents in the knowledge base
 
-### Testing Without API Key
+3. **View Responses**:
+   - Your messages appear on the right with a purple background
+   - Assistant responses appear on the left with a white background
+   - Timestamps help you track the conversation history
 
-You can test the retrieval system without an API key by:
-1. Clicking the "🧪 Test Retrieval" button
-2. Using sample questions (they will show system messages instead of AI responses)
+### Adding Medical Documents
+
+1. Place PDF, HTML, or Markdown documents in the `docs/` directory
+2. The system will automatically process these documents when the application starts
+3. Documents are chunked and converted to embeddings for RAG
+
+### Making API Requests
+
+See the `examples/` directory for sample request payloads:
+
+- `examples/chat_request.json` - Chat with the assistant
+- `examples/search_request.json` - Search for relevant documents
+- `examples/calculate_request.json` - Perform medical calculations
+- `examples/summarize_request.json` - Summarize medical text
+
+### Example API Calls
+
+```bash
+# Health check
+curl http://localhost:5000/api/health
+
+# Chat with the assistant
+curl -X POST http://localhost:5000/api/chat \
+  -H "Content-Type: application/json" \
+  -d @examples/chat_request.json
+
+# Search for documents
+curl -X POST http://localhost:5000/api/search \
+  -H "Content-Type: application/json" \
+  -d @examples/search_request.json
+
+# Calculate BMI
+curl -X POST http://localhost:5000/api/calculate \
+  -H "Content-Type: application/json" \
+  -d @examples/calculate_request.json
+```
 
 ## 🔍 Troubleshooting
 
 ### Common Issues
 
-**1. "Knowledge base not accessible" error**
-- Run `python utils/generate_embeddings.py` to rebuild embeddings
-- Check that `data/embeddings/faiss/` contains `metadata.json` and `embeddings.npy`
+**1. "API key not configured" error**
+- Ensure you have set your OpenRouter API key in the `.env` file
+- Restart the application after updating environment variables
 
-**2. "API key not configured" message**
-- Update the `.env` file with your OpenRouter API key
-- Ensure the key is not wrapped in quotes
-- Restart the application
+**2. "Knowledge base not accessible" error**
+- Verify that the embeddings have been generated in `data/embeddings/faiss/`
+- Run the data processing utilities if needed
 
-**3. Import errors**
-- Install all requirements: `pip install -r requirements.txt`
-- Check Python version (3.10+ required)
-
-**4. Retrieval returns no results**
-- Verify embeddings are generated: `python rag_retriever.py`
-- Check that chunk files exist in `data/chunks/`
+**3. Docker build failures**
+- Ensure Docker is running and you have sufficient permissions
+- Check Docker logs for specific error messages
 
 ### Getting Help
 
 If you encounter issues:
-1. Check the terminal/console for error messages
+1. Check the application logs for error messages
 2. Verify all dependencies are installed
-3. Ensure data files are present and accessible
-4. Test the retriever independently with `python rag_retriever.py`
+3. Ensure environment variables are properly configured
+4. Test individual components with example requests
 
-## 📁 Project Structure
-
-```
-QA_Chat/
-├── app.py                 # Main Streamlit application
-├── rag_retriever.py       # RAG retrieval system
-├── config.json           # Application configuration
-├── requirements.txt      # Python dependencies
-├── .env                  # Environment variables
-├── setup.bat            # Windows setup script
-├── utils/               # Utility scripts
-│   ├── generate_embeddings.py
-│   ├── process_to_chunks.py
-│   └── scrape_dcc.py
-└── data/               # Data directory
-    ├── embeddings/     # Generated embeddings
-    ├── chunks/         # Text chunks
-    └── raw/           # Raw source files
-```
-
-## 🔄 Development
+## 📋 Development
 
 ### Regenerating Embeddings
 
@@ -174,18 +318,12 @@ Test the retriever:
 python rag_retriever.py
 ```
 
-### Customization
+### Adding New Features
 
-- Modify `config.json` for UI settings and sample questions
-- Update styling in `app.py` for visual customizations
-- Adjust retrieval parameters in `rag_retriever.py`
-
-## 📋 Version Info
-
-- **Version**: 1.0.0
-- **Developer**: Olisemeka Nmarkwe
-- **AI Model**: Google Gemma-3 (via OpenRouter)
-- **Embedding Model**: all-MiniLM-L6-v2
+1. Add new routes in `backend/routes/api.py`
+2. Implement new functionality in `backend/agents/` or `backend/utils/`
+3. Update the API documentation in this README
+4. Add example requests in the `examples/` directory
 
 ## 🤝 Contributing
 
@@ -198,86 +336,12 @@ To contribute to this project:
 
 ## 📄 License
 
-This project is developed for Dialysis Care Center to help patients access information about dialysis care and treatment options.
+This project is developed for educational and healthcare assistance purposes.
+
+## 📞 Support
+
+For technical support or questions, please contact the development team.
 
 ---
 
-For technical support or questions, please contact the development team.
-- Responsive design
-
-## Technical Details
-
-- **Embedding Model**: all-MiniLM-L6-v2
-- **Vector Search**: Cosine similarity with scikit-learn
-- **LLM**: Google Gemma 3 27B
-- **Frontend**: Streamlit
-- **Data**: Chunked text and embeddings from DCC website content
-
-## Installation
-
-1. Clone this repository
-2. Run the setup script:
-
-```bash
-# Windows
-setup.bat
-
-# Or manually install dependencies
-pip install -r requirements.txt
-```
-
-3. Create a `.env` file in the root directory and add your OpenRouter API key:
-
-```
-OPENROUTER_API_KEY=your_openrouter_api_key_here
-```
-
-## Usage
-
-1. Run the Streamlit app:
-
-```bash
-streamlit run app.py
-```
-
-2. Open your browser and navigate to the provided URL (typically http://localhost:8501)
-3. Ask questions about dialysis care and treatments
-
-## Project Structure
-
-```
-├── config.json                # Application configuration
-├── requirements.txt           # Python dependencies
-├── app.py                     # Main Streamlit application
-├── rag_retriever.py          # RAG retrieval system
-├── setup.bat                 # Windows setup script
-├── .env                      # Environment variables (API keys)
-├── utils/                    # Utility scripts
-│   ├── generate_embeddings.py # Generate embeddings from text
-│   ├── process_to_chunks.py   # Process text into chunks
-│   └── scrape_dcc.py          # Website scraping utility
-└── data/
-    ├── raw/                   # Raw text data
-    ├── chunks/                # Chunked text data
-    └── embeddings/
-        └── faiss/             # Embeddings and metadata
-            ├── embeddings.npy # Precomputed embeddings
-            └── metadata.json  # Chunk metadata
-```
-
-## OpenRouter API Configuration
-
-This application uses an API key that has been configured in the backend. No additional configuration is needed for the API key.
-
-## Development
-
-- Modify `config.json` to customize the application settings
-- Add new content by running the scraping, chunking, and embedding generation scripts
-
-## License
-
-This project is created for educational purposes.
-
-## Author
-
-Made by [Olisemeka Nmarkwe](https://olisemeka.dev)
+Made with ❤️ for better healthcare accessibility
